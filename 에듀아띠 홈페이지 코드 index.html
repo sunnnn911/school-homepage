@@ -1,0 +1,250 @@
+ 에듀아띠 홈페이지 코드
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>학교 홈페이지</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+    }
+    header {
+      height: 20vh;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 20px;
+      background-color: #f0f0f0;
+      box-sizing: border-box;
+      position: relative;
+    }
+    .menu-button {
+      cursor: pointer;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-around;
+      height: 24px;
+    }
+    .menu-button div {
+      width: 25px;
+      height: 3px;
+      background-color: black;
+    }
+    .menu {
+      display: none;
+      position: fixed;
+      top: 20vh;
+      left: 0;
+      background-color: white;
+      width: 200px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      z-index: 1000;
+    }
+    .menu ul {
+      list-style: none;
+      padding: 10px;
+      margin: 0;
+    }
+    .menu ul li {
+      padding: 8px 0;
+      border-bottom: 1px solid #ddd;
+    }
+    .search-icon {
+      width: 24px;
+      height: 24px;
+      background-image: url('https://cdn-icons-png.flaticon.com/512/49/49116.png');
+      background-size: contain;
+      background-repeat: no-repeat;
+    }
+    .title-text {
+      font-size: 40pt;
+      color: #003399;
+      font-weight: bold;
+      text-align: center;
+      flex-grow: 1;
+    }
+    .main-image {
+      height: 40vh;
+      background-color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .notice-section {
+      height: 20vh;
+      display: flex;
+    }
+    .notice, .letter {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #ccc;
+      box-sizing: border-box;
+    }
+    .notice h3, .letter h3 {
+      margin: 0;
+      padding: 5px;
+      background-color: #f9f9f9;
+    }
+    .upload-area, .meal-upload {
+      flex-grow: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #fafafa;
+      border-top: 1px solid #ccc;
+      position: relative;
+      overflow: hidden;
+    }
+    input[type="file"] {
+      display: none;
+    }
+    .upload-label {
+      padding: 10px;
+      background-color: #ddd;
+      cursor: pointer;
+    }
+    .preview {
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+    }
+    .preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .remove-btn {
+      position: absolute;
+      top: 0;
+      right: 0;
+      width: 0.5cm;
+      height: 0.5cm;
+      background-color: rgba(0, 0, 0, 0.4);
+      color: white;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+    .meal-section {
+      height: 20vh;
+      box-sizing: border-box;
+      border-top: 1px solid #ccc;
+      display: flex;
+      flex-direction: column;
+    }
+    .meal-section h3 {
+      margin: 0;
+      padding: 5px;
+      background-color: #f9f9f9;
+    }
+    .meal-upload {
+      flex: 1;
+      height: calc(100% - 30px);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="menu-button" onclick="toggleMenu()">
+      <div></div>
+      <div></div>
+      <div></div>
+    </div>
+    <div class="title-text">에듀아띠고</div>
+    <div class="search-icon"></div>
+  </header>
+
+  <div class="menu" id="menu">
+    <ul>
+      <li>학교소개</li>
+      <li>열린마당</li>
+      <li>알림마당</li>
+      <li>학습마당</li>
+      <li>교육과정</li>
+      <li>학교 재정 공개</li>
+      <li>학교 특색활동</li>
+      <li>입학안내</li>
+    </ul>
+  </div>
+
+  <div class="main-image upload-area">
+    <label class="upload-label" for="main-upload">사진 첨부</label>
+    <input type="file" id="main-upload" accept="image/*" onchange="previewImage(this)">
+  </div>
+
+  <div class="notice-section">
+    <div class="notice">
+      <h3>공지사항</h3>
+      <div class="upload-area">
+        <label class="upload-label" for="notice-upload">사진 첨부</label>
+        <input type="file" id="notice-upload" accept="image/*" onchange="previewImage(this)">
+      </div>
+    </div>
+    <div class="letter">
+      <h3>가정통신문</h3>
+      <div class="upload-area">
+        <label class="upload-label" for="letter-upload">사진 첨부</label>
+        <input type="file" id="letter-upload" accept="image/*" onchange="previewImage(this)">
+      </div>
+    </div>
+  </div>
+
+  <div class="meal-section">
+    <h3>오늘의 급식</h3>
+    <div class="meal-upload">
+      <label class="upload-label" for="meal-upload">사진 첨부</label>
+      <input type="file" id="meal-upload" accept="image/*" onchange="previewImage(this)">
+    </div>
+  </div>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("menu");
+      menu.style.display = (menu.style.display === "block") ? "none" : "block";
+    }
+
+    // 외부 클릭 시 메뉴 닫힘
+    document.addEventListener('click', function(event) {
+      const menu = document.getElementById('menu');
+      const button = document.querySelector('.menu-button');
+      if (!menu.contains(event.target) && !button.contains(event.target)) {
+        menu.style.display = 'none';
+      }
+    });
+
+    function previewImage(input) {
+      const file = input.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function (e) {
+        const container = input.closest('.upload-area') || input.closest('.meal-upload');
+        container.innerHTML = `
+          <div class="preview">
+            <img src="${e.target.result}" alt="이미지 미리보기">
+            <div class="remove-btn" onclick="removeImage(this)">X</div>
+          </div>
+        `;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function removeImage(btn) {
+      const container = btn.closest('.upload-area') || btn.closest('.meal-upload');
+      const labelFor = container.classList.contains('upload-area') ? 'upload' : 'meal-upload';
+      container.innerHTML = `
+        <label class="upload-label" for="${labelFor}">사진 첨부</label>
+        <input type="file" id="${labelFor}" accept="image/*" onchange="previewImage(this)">
+      `;
+    }
+  </script>
+</body>
+</html>
